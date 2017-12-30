@@ -1,32 +1,27 @@
 const Howler = require('howler');
 
-let sounds = [];
-let swells = [];
-let currentNotes = 0;
-let noteTimeout = 500;
+let celesta = [];
+let planet = [];
 
 export function initSound() {
     for (let i = 1; i <= 22; i++) {
         let istring = zeroPad(i, 3);
-        let newSound = new Howl({
+
+        celesta.push(new Howl({
             src: [
                 "sounds/celesta/" + "celesta" + istring + ".ogg",
                 "sounds/celesta/" + "celesta" + istring + ".mp3"
             ],
             autoplay: false
-        });
-        sounds.push(newSound);
-    }
+        }));
 
-    for (let i = 1; i <= 3; i++) {
-        let newSound = new Howl({
+        planet.push(new Howl({
             src: [
-                "sounds/swells/swell" + i + ".ogg",
-                "sounds/swells/swell" + i + ".mp3"
+                "sounds/planet/" + "planet" + istring + ".ogg",
+                "sounds/planet/" + "planet" + istring + ".mp3"
             ],
             autoplay: false
-        });
-        swells.push(newSound);
+        }));
     }
 }
 
@@ -35,48 +30,30 @@ function zeroPad(num, places) {
     return Array(+(zero > 0 && zero)).join("0") + num;
 }
 
-export function playRandomAtVolume(volume) {
-    var randomPitch = Math.floor(Math.random() * 100);
-    playPitchAtVolume(volume, randomPitch);
-};
+export function playCelesta(volume, pitch) {
+    const idx = calcIdx(pitch, celesta);
+    celesta[idx].volume(volume);
+    celesta[idx].play();
+}
 
-export function playPitchAtVolume(volume, pitch) {
+export function playPlanet(volume, pitch, time) {
+    const idx = calcIdx(pitch, planet);
+    console.log('volume, pitch, time, idx', volume, pitch, time, idx);
+    planet[idx].volume(volume);
+    planet[idx].fade(1, 0, time);
+    planet[idx].play();
+}
+
+function calcIdx(pitch, sounds) {
     // Find the index corresponding to the requested pitch
-    var index = Math.floor(pitch / 100.0 * sounds.length);
-    //console.log("Pitch: " + pitch);
+    let index = Math.floor(pitch / 100.0 * sounds.length);
 
     // Here we fuzz the index a bit to prevent the same sound
     // from being heard over and over again, which gets annoying
-    var fuzz = Math.floor(Math.random() * 4) - 2;
+    const fuzz = Math.floor(Math.random() * 4) - 2;
     index += fuzz;
     index = Math.min(sounds.length - 1, index);
     index = Math.max(0, index);
 
-    //console.log("Fuzz: " + fuzz);
-    //console.log("Index: " + index);
-
-
-    //var readyState = sounds[index].get("readyState");
-    if (currentNotes < 5) {
-        sounds[index].volume(volume);
-        sounds[index].play();
-        currentNotes++;
-        setTimeout(function () {
-            currentNotes--;
-        }, noteTimeout);
-    }
-};
-
-var lastBlockSound = -1;
-export function playRandomSwell() {
-    var randomIndex;
-    do {
-        randomIndex = Math.floor(Math.random() * swells.length);
-    } while (randomIndex == lastBlockSound);
-
-    lastBlockSound = randomIndex;
-
-    //var readyState = this.swells[randomIndex].get("readyState");
-    //if (readyState >= 2)
-    swells[randomIndex].play();
-};
+    return index;
+}
