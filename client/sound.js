@@ -1,7 +1,7 @@
 const Howler = require('howler');
 
-let sounds;
-let swells;
+let sounds = [];
+let swells = [];
 let currentNotes = 0;
 let noteTimeout = 500;
 
