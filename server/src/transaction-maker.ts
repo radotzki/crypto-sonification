@@ -9,12 +9,11 @@ export function makeTransactions() {
 }
 
 function randomTime() {
-    return Math.floor(Math.random() * 5000);
+    return Math.floor(Math.random() * 1000);
 }
 
 function randomValue() {
-    const values = [0, 0.005, 0.0005, 0.015, 0.25, 0.0030, 0.007];
-    return values[Math.floor(Math.random() * values.length)];
+    return (Math.random() * 5).toFixed(3);
 }
 
 function randomAccountIdx() {
