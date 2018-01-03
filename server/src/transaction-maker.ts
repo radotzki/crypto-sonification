@@ -28,11 +28,3 @@ function sendTransaction() {
     const value = web3.toWei(randomValue(), 'ether');
     web3.eth.sendTransaction({ from, to, value });
 }
-
-// web3.personal.unlockAccount("0x5dfe021f45f00ae83b0aa963be44a1310a782fcc", "iloveethereum")
-// web3.personal.unlockAccount("0xfe2b768a23948eddd7d7caea55baa31e39045382", "iloveethereum")
-// web3.personal.unlockAccount("0xa9a418da22532bd1189ff8be5cdaf3570bf9da43", "iloveethereum")
-// web3.personal.unlockAccount("0x9f3a4bbed4660f2dccd6e980e2faa6d6214e5dc8", "iloveethereum")
-// web3.personal.unlockAccount("0xc10261166b4699d3c1535aa30ac29446c755f065", "iloveethereum")
-// web3.personal.unlockAccount("0xe480219e1904de4500cd8459c74d388457a3f3ec", "iloveethereum")
-// web3.personal.unlockAccount("0xed7211f84b37b0f62d345462ffeb56b57b787539", "iloveethereum")

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node-dev src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +15,7 @@
     "ws": "^3.3.3"
   },
   "devDependencies": {
-    "ts-node": "^4.1.0",
+    "ts-node-dev": "^1.0.0-pre.7",
     "typescript": "^2.6.2"
   }
 }

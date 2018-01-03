@@ -3,11 +3,12 @@ import { makeTransactions } from './transaction-maker';
 import { startWatch, blocksSubject, transactionsSubject } from './subscriber';
 
 const wss = new WebSocket.Server({ host: '0.0.0.0', port: 8090 });
+
 main();
 
 function main() {
     startWatch();
-    // makeTransactions();
+    makeTransactions();
 
     blocksSubject.subscribe(block => {
         console.log(block);
@@ -27,3 +28,7 @@ wss.broadcast = (data) => {
         }
     });
 };
+
+wss.on('connection', ws => {
+    ws.on('error', () => null);
+});

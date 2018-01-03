@@ -1,0 +1,7 @@
+geth \
+  --datadir .datadir \
+  --networkid 1000 \
+  --rpc \
+  --ipcpath .datadir/geth.ipc \
+  --nodiscover
+  console
