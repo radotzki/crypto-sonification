@@ -50,60 +50,39 @@ function subscribeToMessages() {
 }
 
 function playTransaction(tx) {
-    const max = 5;
-    const minVolume = 0.3;
-    const maxVolume = 0.7;
-    let volume = tx.value / (max / (maxVolume - minVolume)) + minVolume;
-    if (volume > maxVolume)
-        volume = maxVolume;
-
-    const maxPitch = 100.0;
-    // We need to use a log that makes it so that maxBitcoins reaches the maximum pitch.
-    // Well, the opposite of the maximum pitch. Anyway. So we solve:
-    // maxPitch = log(maxBitcoins + logUsed) / log(logUsed)
-    // For maxPitch = 100 (for 100%) and maxBitcoins = 1000, that gives us...
-    const logUsed = 1.0715307808111486871978099;
-    // So we find the smallest value between log(bitcoins + logUsed) / log(logUsed) and our max pitch...
-    let pitch = Math.min(maxPitch, Math.log(tx.value + logUsed) / Math.log(logUsed));
-    // ...we invert it so that a bigger transaction = a deeper noise...
-    pitch = maxPitch - pitch;
-
+    const volume = calcVolume(tx.value, 5);
+    const pitch = calcPitch(tx.value, 5);
     playCelesta(volume, pitch);
 }
 
 function playBlock(block) {
-    const max = 20;
+    const volume = calcVolume(block.transactions, 7);
+    const pitch = calcPitch(block.transactions, 5);
+    playPlanet(volume, pitch);
+}
+
+function calcPitch(value, maxValue) {
+    const maxPitch = 100.0;
+    const rel = 1 - (value / maxValue); // number between 0 and 1
+    return Math.max(0, Math.min(maxPitch, rel * maxPitch));
+}
+
+function calcVolume(value, maxValue) {
     const minVolume = 0.3;
     const maxVolume = 0.7;
-    let volume = block.time / (max / (maxVolume - minVolume)) + minVolume;
-    if (volume > maxVolume)
-        volume = maxVolume;
-
-    const maxPitch = 100.0;
-    // We need to use a log that makes it so that maxBitcoins reaches the maximum pitch.
-    // Well, the opposite of the maximum pitch. Anyway. So we solve:
-    // maxPitch = log(maxBitcoins + logUsed) / log(logUsed)
-    // For maxPitch = 100 (for 100%) and maxBitcoins = 1000, that gives us...
-    const logUsed = 1.0715307808111486871978099;
-    // So we find the smallest value between log(bitcoins + logUsed) / log(logUsed) and our max pitch...
-    let pitch = Math.min(maxPitch, Math.log(block.time + logUsed) / Math.log(logUsed));
-    // ...we invert it so that a bigger transaction = a deeper noise...
-    pitch = maxPitch - pitch;
-
-    const time = block.time * 1000;
-
-    playPlanet(volume, pitch, time);
+    const volume = value / (maxValue / (maxVolume - minVolume)) + minVolume;
+    return Math.max(minVolume, Math.min(maxVolume, volume));
 }
 
 function drawEvent(data, svg_area) {
     var starting_opacity = 1;
-    var opacity = 1 / (100 / (data.value | data.transactions));
+    var opacity = 1 / (100 / (data.value || data.transactions));
     if (opacity > 0.5) {
         opacity = 0.5;
     }
-    var size = (data.value | data.transactions);
+    var size = (data.value || data.transactions);
     var label_text;
-    var ring_radius = 80;
+    var ring_radius = ((data.value || data.transactions) + 0.001) * 50;
     var ring_anim_duration = 3000;
     svg_text_color = '#FFFFFF';
 
@@ -116,8 +95,6 @@ function drawEvent(data, svg_area) {
         case "block":
             label_text = `${data.transactions} TXs, ${data.time} SEC`;
             edit_color = '#C6FF00';
-            ring_anim_duration = 10000;
-            ring_radius = 600;
             break;
     }
 

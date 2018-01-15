@@ -36,11 +36,9 @@ export function playCelesta(volume, pitch) {
     celesta[idx].play();
 }
 
-export function playPlanet(volume, pitch, time) {
+export function playPlanet(volume, pitch) {
     const idx = calcIdx(pitch, planet);
-    console.log('volume, pitch, time, idx', volume, pitch, time, idx);
     planet[idx].volume(volume);
-    planet[idx].fade(1, 0, time);
     planet[idx].play();
 }
 
