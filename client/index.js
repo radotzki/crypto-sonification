@@ -1,15 +1,16 @@
+const d3 = require('d3');
 const ws = new WebSocket('ws://0.0.0.0:8090');
 import { initSound, playCelesta, playPlanet } from './sound';
 
 let svg;
-let svg_background_color_online = '#0288D1',
+let svg_background_color_online = '#533159',
     svg_background_color_offline = '#E91E63',
     svg_text_color = '#FFFFFF',
     newuser_box_color = 'rgb(41, 128, 185)',
     push_color = 'rgb(155, 89, 182)',
-    issue_color = 'rgb(46, 204, 113)',
-    pull_request_color = 'rgb(46, 204, 113)',
-    comment_color = 'rgb(46, 204, 113)',
+    issue_color = '#533159',
+    pull_request_color = '#533159',
+    comment_color = '#533159',
     edit_color = '#fff',
     total_sounds = 51;
 
@@ -89,12 +90,12 @@ function drawEvent(data, svg_area) {
     switch (data.type) {
         case "tx":
             label_text = `${data.value} ETH`;
-            edit_color = '#B2DFDB';
+            edit_color = '#97374e';
             break;
 
         case "block":
             label_text = `${data.transactions} TXs, ${data.time} SEC`;
-            edit_color = '#C6FF00';
+            edit_color = '#f3d467';
             break;
     }
 
